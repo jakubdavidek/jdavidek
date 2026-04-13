@@ -33,16 +33,21 @@ export default function About() {
             <div style={{
               borderRadius: 24, overflow: "hidden",
               aspectRatio: "4/5",
-              background: "#eeebe4",
-              display: "flex", alignItems: "flex-end", padding: "1.5rem",
               position: "relative",
+              background: "#1c1c1c",
             }}>
-              {/* TODO: replace with <Image src="/jiri-davidek-portrait.jpg" alt="Jiří Davídek" fill style={{objectFit:"cover"}} /> */}
-              <div style={{
-                fontFamily: "var(--font-display,'DM Serif Display',Georgia,serif)",
-                fontSize: "7rem", color: "rgba(0,0,0,0.07)",
-                lineHeight: 1, userSelect: "none",
-              }}>JD</div>
+              <img
+                src="/jiri-davidek-portrait.jpg"
+                alt="Jiří Davídek při práci"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                }}
+              />
+              {/* Jakmile budeš mít portrét, nahraď src za "/jiri-davidek-portrait.jpg" */}
             </div>
 
             {/* Badge */}

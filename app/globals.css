@@ -12,7 +12,11 @@
 }
 
 /* ── Base ── */
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
@@ -34,9 +38,18 @@ body {
 }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 99px;
+}
 
 /* ── Grain Overlay ── */
 .grain-overlay {
@@ -51,15 +64,36 @@ body {
   animation: grain 8s steps(10) infinite;
 }
 
-.dark .grain-overlay { opacity: 0.045; }
+.dark .grain-overlay {
+  opacity: 0.045;
+}
 
 @keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-2%, -3%); }
-  30% { transform: translate(3%, -1%); }
-  50% { transform: translate(-1%, 2%); }
-  70% { transform: translate(2%, 3%); }
-  90% { transform: translate(-3%, 1%); }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-2%, -3%);
+  }
+
+  30% {
+    transform: translate(3%, -1%);
+  }
+
+  50% {
+    transform: translate(-1%, 2%);
+  }
+
+  70% {
+    transform: translate(2%, 3%);
+  }
+
+  90% {
+    transform: translate(-3%, 1%);
+  }
 }
 
 /* ── Typography ── */
@@ -100,11 +134,11 @@ body {
 
 .bento-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.12);
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.12);
 }
 
 .dark .bento-card:hover {
-  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.6);
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Accent Button ── */
@@ -129,7 +163,7 @@ body {
 .btn-accent:hover {
   background: var(--accent-light);
   transform: translateY(-1px);
-  box-shadow: 0 8px 30px -6px rgba(234,108,0,0.5);
+  box-shadow: 0 8px 30px -6px rgba(234, 108, 0, 0.5);
 }
 
 /* ── Ghost Button ── */
@@ -154,11 +188,11 @@ body {
 
 .btn-ghost:hover {
   opacity: 1;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .dark .btn-ghost:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Section Divider ── */
@@ -189,7 +223,9 @@ body {
   border-bottom-color: #333;
 }
 
-.form-field::placeholder { color: #9a9a94; }
+.form-field::placeholder {
+  color: #9a9a94;
+}
 
 .form-field:focus {
   border-bottom-color: var(--accent);
@@ -221,7 +257,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 60%, rgba(234,108,0,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 30% 60%, rgba(234, 108, 0, 0.12) 0%, transparent 70%);
 }
 
 /* ── Nav ── */
@@ -253,8 +289,47 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(234,108,0,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(234, 108, 0, 0.08) 0%, transparent 70%);
 }
 
 /* ── Horizontal Scroll prevention ── */
-section, .container-custom { max-width: 100vw; }
+section,
+.container-custom {
+  max-width: 100vw;
+}
+
+/* ── Skip to content (accessibility + SEO) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: #ea6c00;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 0 0 8px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .services-bento {
+    grid-template-columns: 1fr !important;
+  }
+
+  .services-bento>* {
+    grid-row: span 1 !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .services-bento {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

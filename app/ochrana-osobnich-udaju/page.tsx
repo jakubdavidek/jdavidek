@@ -21,7 +21,7 @@ export default function Privacy() {
           Ochrana osobních údajů
         </h1>
         <p className="text-sm text-[#888] dark:text-ink-subtle mb-8">
-          Platné od 1. 1. 2024 — Jiří Davídek, IČO: [DOPLNIT], Karlovarská 24, 301 00 Plzeň
+          Platné od 1. 1. 2024 — Jiří Davídek, IČO: 47747439, Karlovarská 24, 301 00 Plzeň
         </p>
 
         <h2>1. Správce osobních údajů</h2>

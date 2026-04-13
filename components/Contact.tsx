@@ -112,21 +112,22 @@ export default function Contact() {
               </div>
             ))}
 
-            {/* Map placeholder */}
+            {/* Mapa */}
             <div style={{
-              flex: 1, minHeight: 180, borderRadius: 16,
-              background: "linear-gradient(135deg,#1a1a1a,#222)",
+              flex: 1, minHeight: 220, borderRadius: 16,
+              overflow: "hidden",
               border: "1px solid rgba(255,255,255,0.07)",
-              display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center",
-              gap: 6, padding: 16,
             }}>
-              {/* TODO: <iframe src="https://www.google.com/maps/embed?..." className="w-full h-full border-0" /> */}
-              <span style={{ fontSize: 22, opacity: 0.4 }}>📍</span>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", textAlign: "center", lineHeight: 1.6 }}>
-                Karlovarská 24, Plzeň<br />
-                <span style={{ fontSize: 10, opacity: 0.6 }}>(Google Maps bude doplněna)</span>
-              </span>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d784.5007937358707!2d13.372784128575628!3d49.757369364597686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470af1f48e31a965%3A0xf42f4db4c0d4a166!2sKarlovarsk%C3%A1%20490%2F24%2C%20301%2000%20Plze%C5%88%201!5e1!3m2!1scs!2scz!4v1776112985968!5m2!1scs!2scz"
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: "block", minHeight: 220 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Jiří Davídek – Karlovarská 24, Plzeň"
+              />
             </div>
           </motion.div>
 

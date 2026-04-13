@@ -1,32 +1,21 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://jdavidek.cz";
+  const now = new Date();
 
   return [
     {
       url: base,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "monthly",
-      priority: 1,
+      priority: 1.0,
     },
     {
-      url: `${base}/#sluzby`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${base}/#o-nas`,
-      lastModified: new Date(),
+      url: `${base}/ochrana-osobnich-udaju`,
+      lastModified: now,
       changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    {
-      url: `${base}/#kontakt`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.8,
+      priority: 0.3,
     },
   ];
 }
