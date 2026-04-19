@@ -16,12 +16,15 @@ const contactItems = [
   { icon: "◷", label: "Provozní hodiny", value: "Po–Pá 7:00–18:00, So po dohodě", href: null },
 ];
 
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+
 export default function Contact() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm(p => ({ ...p, [e.target.name]: e.target.value }));
@@ -29,9 +32,33 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setLoading(false);
-    setSubmitted(true);
+    setError(null);
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Nová poptávka – ${form.service || "obecná"}`,
+          from_name: form.name,
+          name: form.name,
+          email: form.email,
+          phone: form.phone || "—",
+          service: form.service || "—",
+          message: form.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError("Odeslání se nezdařilo. Zkuste to prosím znovu nebo napište přímo na e-mail.");
+      }
+    } catch {
+      setError("Nepodařilo se připojit. Zkontrolujte připojení k internetu a zkuste znovu.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -191,6 +218,9 @@ export default function Contact() {
                     onFocus={e => e.target.style.borderBottomColor = "#ea6c00"}
                     onBlur={e => e.target.style.borderBottomColor = "rgba(255,255,255,0.15)"} />
                 </div>
+                {error && (
+                  <p style={{ fontSize: 12, color: "#f87171", margin: 0, lineHeight: 1.55 }}>{error}</p>
+                )}
                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
                   <button type="submit" disabled={loading}
                     style={{

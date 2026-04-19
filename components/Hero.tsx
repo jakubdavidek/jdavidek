@@ -17,6 +17,7 @@ export default function Hero() {
     <section style={{
       background: "#0d0d0d",
       minHeight: "100vh",
+      width: "100%",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-end",
@@ -33,7 +34,7 @@ export default function Hero() {
           position: "absolute", inset: 0,
           width: "100%", height: "100%",
           objectFit: "cover", objectPosition: "center",
-          opacity: 0.28,
+          opacity: 0.8,
           pointerEvents: "none",
         }}
       />

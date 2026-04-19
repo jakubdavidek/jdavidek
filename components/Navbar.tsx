@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Sun, Moon, Menu, X } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Služby", href: "#sluzby" },
@@ -13,16 +13,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = stored === "dark" || (!stored && prefersDark);
-    setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -30,25 +21,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-  };
-
   const handleNav = (href: string) => {
     setMenuOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const navBg = scrolled
-    ? dark ? "rgba(10,10,10,0.90)" : "rgba(247,245,241,0.90)"
-    : "transparent";
-
-  const navBorder = scrolled
-    ? dark ? "0 1px 0 rgba(255,255,255,0.07)" : "0 1px 0 rgba(0,0,0,0.08)"
-    : "none";
+  const navBg = scrolled || menuOpen ? "rgba(10,10,10,0.96)" : "transparent";
+  const navBorder = scrolled || menuOpen ? "0 1px 0 rgba(255,255,255,0.07)" : "none";
 
   return (
     <>
@@ -58,8 +37,9 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-          backdropFilter: scrolled ? "blur(20px) saturate(150%)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(20px) saturate(150%)" : "none",
+          width: "100%",
+          backdropFilter: scrolled || menuOpen ? "blur(20px) saturate(150%)" : "none",
+          WebkitBackdropFilter: scrolled || menuOpen ? "blur(20px) saturate(150%)" : "none",
           backgroundColor: navBg,
           boxShadow: navBorder,
           transition: "background-color 0.3s ease, box-shadow 0.3s ease",
@@ -76,7 +56,7 @@ export default function Navbar() {
             style={{ background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}>
             <div style={{
               fontFamily: "var(--font-display, 'DM Serif Display', Georgia, serif)",
-              fontSize: "1.1rem", color: dark ? "#fafaf8" : "#111",
+              fontSize: "1.1rem", color: "#fafaf8",
               lineHeight: 1, letterSpacing: "-0.02em",
             }}>Jiří Davídek</div>
             <div style={{
@@ -94,18 +74,16 @@ export default function Navbar() {
                   background: "none", border: "none", cursor: "pointer",
                   padding: "6px 14px", borderRadius: 20,
                   fontSize: 13, fontWeight: 500,
-                  color: dark ? "#9a9a94" : "#555",
+                  color: "#9a9a94",
                   fontFamily: "inherit", transition: "all 0.15s",
                 }}
                 onMouseEnter={e => {
-                  const t = e.currentTarget;
-                  t.style.color = dark ? "#fafaf8" : "#111";
-                  t.style.background = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+                  e.currentTarget.style.color = "#fafaf8";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.08)";
                 }}
                 onMouseLeave={e => {
-                  const t = e.currentTarget;
-                  t.style.color = dark ? "#9a9a94" : "#555";
-                  t.style.background = "none";
+                  e.currentTarget.style.color = "#9a9a94";
+                  e.currentTarget.style.background = "none";
                 }}
               >{link.label}</button>
             ))}
@@ -121,16 +99,6 @@ export default function Navbar() {
               }}>
               <Phone size={13} /> 606 513 793
             </a>
-
-            <button onClick={toggleDark} aria-label="Přepnout téma"
-              style={{
-                width: 34, height: 34, borderRadius: "50%",
-                border: "none", background: "none", cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: dark ? "#9a9a94" : "#666",
-              }}>
-              {dark ? <Sun size={15} /> : <Moon size={15} />}
-            </button>
 
             <button onClick={() => handleNav("#kontakt")}
               className="jd-nav-links"
@@ -150,7 +118,7 @@ export default function Navbar() {
                 width: 34, height: 34, borderRadius: "50%",
                 border: "none", background: "none", cursor: "pointer",
                 display: "none", alignItems: "center", justifyContent: "center",
-                color: dark ? "#9a9a94" : "#555",
+                color: "#9a9a94",
               }}>
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -169,8 +137,8 @@ export default function Navbar() {
             style={{
               position: "fixed", top: 64, left: 0, right: 0, zIndex: 40,
               backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-              backgroundColor: dark ? "rgba(10,10,10,0.96)" : "rgba(247,245,241,0.97)",
-              boxShadow: dark ? "0 1px 0 rgba(255,255,255,0.07)" : "0 1px 0 rgba(0,0,0,0.08)",
+              backgroundColor: "rgba(10,10,10,0.96)",
+              boxShadow: "0 1px 0 rgba(255,255,255,0.07)",
               padding: "1.25rem 1.5rem 1.5rem",
               display: "flex", flexDirection: "column", gap: 4,
             }}
@@ -181,11 +149,11 @@ export default function Navbar() {
                   background: "none", border: "none", cursor: "pointer",
                   padding: "12px 16px", borderRadius: 12,
                   fontSize: 15, fontWeight: 500, textAlign: "left",
-                  color: dark ? "#fafaf8" : "#222", fontFamily: "inherit",
+                  color: "#fafaf8", fontFamily: "inherit",
                 }}>{link.label}</button>
             ))}
             <div style={{
-              borderTop: dark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.08)",
+              borderTop: "1px solid rgba(255,255,255,0.08)",
               marginTop: 8, paddingTop: 16,
               display: "flex", alignItems: "center", justifyContent: "space-between",
             }}>

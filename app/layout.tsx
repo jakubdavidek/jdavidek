@@ -237,14 +237,8 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="cs" suppressHydrationWarning>
+    <html lang="cs" className="dark">
       <head>
-        {/* Dark mode init – anti-flicker */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{const s=localStorage.getItem('theme');const d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(s===null&&d))document.documentElement.classList.add('dark');}catch(e){}`,
-          }}
-        />
         {/* Schema.org JSON-LD */}
         <script
           type="application/ld+json"
@@ -259,7 +253,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={`${dmSerif.variable} ${outfit.variable}`}>
-        <div className="grain-overlay" aria-hidden="true" />
         {children}
       </body>
     </html>

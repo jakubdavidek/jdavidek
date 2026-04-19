@@ -1,43 +1,43 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const categories = ["Vše", "Vozidla", "Firma", "Domácnost"];
 
 const references = [
   {
-    name: "Martin K.", location: "Plzeň", category: "Vozidla", rating: 5,
+    name: "Martin K.", location: "Plzeň",
     text: "Jiří se postaral o interiér mého auta lépe než profesionální autodetailingové studio. Sedačky vypadaly jako nové. Určitě se vrátím.",
-    service: "Čištění interiéru vozidla"
+    service: "Čištění interiéru vozidla", rating: 5,
   },
   {
-    name: "Eva Horáčková", location: "Rokycany", category: "Domácnost", rating: 5,
+    name: "Eva Horáčková", location: "Rokycany",
     text: "Dárkový poukaz na úklid od manžela byl skvělý nápad. Jiří přišel včas, pracoval pečlivě a byt zářil čistotou. Doporučuji.",
-    service: "Úklid domácnosti"
+    service: "Úklid domácnosti", rating: 5,
   },
   {
-    name: "Tomáš Říha – TS Servis s.r.o.", location: "Plzeň – Skvrňany", category: "Firma", rating: 5,
+    name: "Tomáš Říha – TS Servis s.r.o.", location: "Plzeň – Skvrňany",
     text: "Pro naše provozní prostory využíváme Jiřího pravidelně. Spolehlivost, kvalita a dochvilnost na sto procent. Doporučuji každé firmě.",
-    service: "Pravidelný úklid provozovny"
+    service: "Pravidelný úklid provozovny", rating: 5,
   },
   {
-    name: "Petra N.", location: "Plzeň – Doubravka", category: "Domácnost", rating: 5,
+    name: "Petra N.", location: "Plzeň – Doubravka",
     text: "Terasa a dlažba před domem vypadaly opravdu zanedbaně. Po vysokotlakém čištění jsem je nepoznala. Skvělá práce!",
-    service: "Vysokotlaké čištění dlažby"
+    service: "Vysokotlaké čištění dlažby", rating: 5,
   },
   {
-    name: "Radek Blaha", location: "Starý Plzenec", category: "Vozidla", rating: 5,
+    name: "Radek Blaha", location: "Starý Plzenec",
     text: "Půjčil jsem si elektrocentrálu na celý víkend. Vše fungovalo perfektně, Jiří mi vše ukázal a byl dostupný na telefonu. Palec nahoru.",
-    service: "Půjčovna – elektrocentrála"
+    service: "Půjčovna – elektrocentrála", rating: 5,
   },
 ];
 
 const CARD_WIDTH = 320;
 const CARD_GAP = 16;
 const CARD_STEP = CARD_WIDTH + CARD_GAP;
-const AUTO_SPEED = 0.6; // px per frame
+const AUTO_SPEED = 0.5;
+
+const looped = [...references, ...references, ...references];
 
 export default function References() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -45,27 +45,18 @@ export default function References() {
   const animRef = useRef<number>(0);
   const pausedRef = useRef(false);
   const inView = useInView(sectionRef, { once: true, margin: "-80px" });
-  const [active, setActive] = useState("Vše");
 
-  const filtered = active === "Vše" ? references : references.filter(r => r.category === active);
-  // Duplicate cards for seamless loop
-  const looped = [...filtered, ...filtered, ...filtered];
-
-  // Auto-scroll loop
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
 
-    // Reset scroll position to middle set
-    const mid = filtered.length * CARD_STEP;
-    el.scrollLeft = mid;
+    el.scrollLeft = references.length * CARD_STEP;
 
     const tick = () => {
       if (!pausedRef.current && el) {
         el.scrollLeft += AUTO_SPEED;
-        // When we've scrolled into the third copy, jump back to the first copy seamlessly
-        if (el.scrollLeft >= filtered.length * 2 * CARD_STEP) {
-          el.scrollLeft -= filtered.length * CARD_STEP;
+        if (el.scrollLeft >= references.length * 2 * CARD_STEP) {
+          el.scrollLeft -= references.length * CARD_STEP;
         }
       }
       animRef.current = requestAnimationFrame(tick);
@@ -73,12 +64,10 @@ export default function References() {
 
     animRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animRef.current);
-  }, [filtered.length, active]);
+  }, []);
 
   const scroll = (dir: "left" | "right") => {
-    const el = trackRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir === "right" ? CARD_STEP * 2 : -CARD_STEP * 2, behavior: "smooth" });
+    trackRef.current?.scrollBy({ left: dir === "right" ? CARD_STEP * 2 : -CARD_STEP * 2, behavior: "smooth" });
   };
 
   return (
@@ -103,136 +92,63 @@ export default function References() {
           >
             Co říkají<br /><em style={{ color: "#ea6c00", fontStyle: "italic" }}>naši klienti.</em>
           </motion.h2>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            {/* Filter tabs */}
-            <div style={{ display: "flex", gap: 6 }}>
-              {categories.map(cat => (
-                <button key={cat} onClick={() => setActive(cat)}
-                  style={{
-                    padding: "7px 15px", borderRadius: 20, border: "none",
-                    cursor: "pointer", fontSize: 13, fontWeight: 600,
-                    fontFamily: "inherit", transition: "all 0.2s",
-                    background: active === cat ? "#ea6c00" : "#e8e4dc",
-                    color: active === cat ? "#fff" : "#666",
-                    boxShadow: active === cat ? "0 4px 14px rgba(234,108,0,0.3)" : "none",
-                  }}
-                >{cat}</button>
-              ))}
-            </div>
-
-            {/* Arrow buttons */}
-            <div style={{ display: "flex", gap: 6 }}>
-              {(["left", "right"] as const).map(dir => (
-                <button key={dir} onClick={() => scroll(dir)}
-                  style={{
-                    width: 38, height: 38, borderRadius: "50%",
-                    border: "1px solid #d8d4cc", background: "#fff",
-                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "#555", transition: "all 0.2s",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "#ea6c00"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "#ea6c00"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#555"; e.currentTarget.style.borderColor = "#d8d4cc"; }}
-                >
-                  {dir === "left" ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Carousel — edge fades */}
+      {/* Carousel */}
       <div style={{ position: "relative" }}>
-        {/* Left fade */}
-        <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
-          background: "linear-gradient(to right, #f7f5f1, transparent)",
-        }} />
-        {/* Right fade */}
-        <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
-          background: "linear-gradient(to left, #f7f5f1, transparent)",
-        }} />
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none", background: "linear-gradient(to right, #f7f5f1, transparent)" }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none", background: "linear-gradient(to left, #f7f5f1, transparent)" }} />
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
+        <div
+          ref={trackRef}
+          onMouseEnter={() => { pausedRef.current = true; }}
+          onMouseLeave={() => { pausedRef.current = false; }}
+          onTouchStart={() => { pausedRef.current = true; }}
+          onTouchEnd={() => { pausedRef.current = false; }}
+          className="refs-track"
+          style={{
+            display: "flex", gap: CARD_GAP, overflowX: "scroll",
+            paddingLeft: "2.5rem", paddingRight: "2.5rem",
+            paddingBottom: 8, paddingTop: 4,
+            msOverflowStyle: "none", userSelect: "none",
+          }}
+        >
+          {looped.map((r, i) => (
             <div
-              ref={trackRef}
-              onMouseEnter={() => { pausedRef.current = true; }}
-              onMouseLeave={() => { pausedRef.current = false; }}
-              onTouchStart={() => { pausedRef.current = true; }}
-              onTouchEnd={() => { pausedRef.current = false; }}
+              key={`${r.name}-${i}`}
               style={{
-                display: "flex",
-                gap: CARD_GAP,
-                overflowX: "scroll",
-                paddingLeft: "2.5rem",
-                paddingRight: "2.5rem",
-                paddingBottom: 8,
-                paddingTop: 4,
-                msOverflowStyle: "none",
-                userSelect: "none",
+                minWidth: CARD_WIDTH, maxWidth: CARD_WIDTH,
+                background: "#fff", border: "1px solid #ede9e0",
+                borderRadius: 20, padding: 24,
+                display: "flex", flexDirection: "column", gap: 14,
+                flexShrink: 0, boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
               }}
-              className="refs-track"
             >
-              {looped.map((r, i) => (
-                <div
-                  key={`${r.name}-${i}`}
-                  style={{
-                    minWidth: CARD_WIDTH,
-                    maxWidth: CARD_WIDTH,
-                    background: "#fff",
-                    border: "1px solid #ede9e0",
-                    borderRadius: 20,
-                    padding: 24,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 14,
-                    flexShrink: 0,
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                  }}
-                >
-                  {/* Stars */}
-                  <div style={{ display: "flex", gap: 2 }}>
-                    {Array.from({ length: r.rating }).map((_, j) => (
-                      <span key={j} style={{ color: "#ea6c00", fontSize: 14 }}>★</span>
-                    ))}
-                  </div>
+              <div style={{ display: "flex", gap: 2 }}>
+                {Array.from({ length: r.rating }).map((_, j) => (
+                  <span key={j} style={{ color: "#ea6c00", fontSize: 14 }}>★</span>
+                ))}
+              </div>
 
-                  {/* Quote mark */}
-                  <div style={{ fontSize: 30, lineHeight: 0.5, color: "rgba(234,108,0,0.13)", fontFamily: "Georgia,serif", marginBottom: -4 }}>"</div>
+              <div style={{ fontSize: 30, lineHeight: 0.5, color: "rgba(234,108,0,0.13)", fontFamily: "Georgia,serif", marginBottom: -4 }}>"</div>
 
-                  <p style={{ fontSize: 14, lineHeight: 1.7, color: "#444", margin: 0, flex: 1 }}>
-                    {r.text}
-                  </p>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#444", margin: 0, flex: 1 }}>{r.text}</p>
 
-                  {/* Footer */}
-                  <div style={{
-                    borderTop: "1px solid #f0ede8", paddingTop: 14,
-                    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
-                  }}>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: "#111", lineHeight: 1.3 }}>{r.name}</div>
-                      <div style={{ fontSize: 11, color: "#bbb", marginTop: 2 }}>{r.location}</div>
-                    </div>
-                    <span style={{
-                      fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em",
-                      whiteSpace: "nowrap", background: "#f0ede8", color: "#999",
-                      padding: "4px 10px", borderRadius: 20, flexShrink: 0,
-                    }}>{r.service}</span>
-                  </div>
+              <div style={{ borderTop: "1px solid #f0ede8", paddingTop: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#111", lineHeight: 1.3 }}>{r.name}</div>
+                  <div style={{ fontSize: 11, color: "#bbb", marginTop: 2 }}>{r.location}</div>
                 </div>
-              ))}
+                <span style={{
+                  fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em",
+                  whiteSpace: "nowrap", background: "#f0ede8", color: "#999",
+                  padding: "4px 10px", borderRadius: 20, flexShrink: 0,
+                }}>{r.service}</span>
+              </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          ))}
+        </div>
       </div>
 
       <style>{`
